@@ -9,6 +9,7 @@ using Game.SceneFlow;
 using Game.UI.Editor;
 using Notification_Looker.Localisation;
 using Notification_Looker.Settings;
+using Notification_Looker.Systems;
 using UnityEngine.InputSystem;
 
 namespace Notification_Looker
@@ -41,6 +42,9 @@ namespace Notification_Looker
             }
 
             AssetDatabase.global.LoadSettings(nameof(Notification_Looker), m_Setting, new Setting(this));
+
+            // Register custom update systems for UI
+            updateSystem.UpdateAt<NotificationCountSystem>(SystemUpdatePhase.GameSimulation);
         }
 
         public void OnDispose()
