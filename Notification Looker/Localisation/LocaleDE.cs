@@ -5,6 +5,7 @@ using Game.Modding;
 using Game.Settings;
 using Game.UI;
 using Game.UI.Widgets;
+using Setting = Notification_Looker.Settings.Setting;
 
 namespace Notification_Looker.Localisation
 {

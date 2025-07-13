@@ -8,6 +8,7 @@ using Game.Modding;
 using Game.SceneFlow;
 using Game.UI.Editor;
 using Notification_Looker.Localisation;
+using Notification_Looker.Settings;
 using UnityEngine.InputSystem;
 
 namespace Notification_Looker

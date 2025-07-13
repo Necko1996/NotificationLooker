@@ -6,7 +6,7 @@ using Game.Settings;
 using Game.UI;
 using Game.UI.Widgets;
 
-namespace Notification_Looker
+namespace Notification_Looker.Settings
 {
     [FileLocation(nameof(Notification_Looker))]
     [SettingsUIGroupOrder(kButtonGroup)]
