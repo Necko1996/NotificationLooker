@@ -22,9 +22,7 @@ namespace Notification_Looker.Systems
         private PrefabSystem prefabSystem;
         private EntityQuery iconQuery;
         private EntityQuery notificationIconDisplayDataQuery;
-
-        private EntityQuery pollutionNotificationParameterQuery;
-        private readonly Dictionary<Entity, int> EntityDictionary = new();
+        private readonly Dictionary<Entity, int> listNotificaiton = new();
 
         protected override void OnCreate()
         {
@@ -54,7 +52,7 @@ namespace Notification_Looker.Systems
 
         protected override void OnUpdate()
         {
-            EntityDictionary.Clear();
+            listNotificaiton.Clear();
             var total = 0;
 
             NativeArray<ArchetypeChunk> nativeArray = iconQuery.ToArchetypeChunkArray(Allocator.TempJob);
@@ -68,23 +66,23 @@ namespace Notification_Looker.Systems
                 {
                     Entity prefab = nativeArray2[j].m_Prefab;
 
-                    if (EntityDictionary.TryGetValue(prefab, out int num))
+                    if (listNotificaiton.TryGetValue(prefab, out int num))
                     {
-                        EntityDictionary[prefab] = num + 1;
+                        listNotificaiton[prefab] = num + 1;
                     }
                     else
                     {
-                        EntityDictionary.Add(prefab, 1);
+                        listNotificaiton.Add(prefab, 1);
                     }
                 }
             }
 
             nativeArray.Dispose();
-            var orderedEntityDictionary = EntityDictionary.OrderByDescending(x => x.Value);
+            listNotificaiton.OrderByDescending(x => x.Value);
 
-            if (EntityDictionary.Any())
+            if (listNotificaiton.Any())
             {
-                foreach (var item in orderedEntityDictionary)
+                foreach (var item in listNotificaiton)
                 {
                     Mod.log.Info($"{prefabSystem.GetPrefab<NotificationIconPrefab>(item.Key).name} | {item.Value}");
                 }
@@ -98,7 +96,7 @@ namespace Notification_Looker.Systems
         {
             base.OnDestroy();
 
-            EntityDictionary.Clear();
+            listNotificaiton.Clear();
 
             EntityManager.DestroyEntity(notificationIconDisplayDataQuery);
             EntityManager.DestroyEntity(iconQuery);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Colossal.IO.AssetDatabase;
 using Colossal.Logging;
 using Game;
@@ -16,6 +17,10 @@ namespace Notification_Looker
 {
     public class Mod : IMod
     {
+        public static string Name => Assembly.GetExecutingAssembly().GetName().Name;
+        public static string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
+        public static string InformationalVersion => Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+
         public static ILog log = LogManager.GetLogger($"{nameof(Notification_Looker)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
         private Setting m_Setting;
 
@@ -27,6 +32,8 @@ namespace Notification_Looker
             {
                 log.Info($"Current mod asset at {asset.path}");
             }
+
+            log.Info(Name + ' ' + Version + ' ' + InformationalVersion);
 
             m_Setting = new Setting(this);
             m_Setting.RegisterInOptionsUI();
@@ -45,6 +52,7 @@ namespace Notification_Looker
 
             // Register custom update systems for UI
             updateSystem.UpdateAt<NotificationCountSystem>(SystemUpdatePhase.GameSimulation);
+            updateSystem.UpdateAt<ModUI>(SystemUpdatePhase.UIUpdate);
         }
 
         public void OnDispose()
