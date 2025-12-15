@@ -17,7 +17,6 @@ namespace Notification_Looker.Systems
         private const string NotificationCountData = "NotifcationCountData";
 
         private ValueBinding<bool> _panelOpenBinding = new ValueBinding<bool>(Mod.Name, MenuOpen, false);
-        //private ValueBinding<bool> _notificationCountDataBinding = new GetterValueBinding<string>(Mod.Name, NotificationCountData, new string[3]);
 
         protected override void OnCreate()
         {
