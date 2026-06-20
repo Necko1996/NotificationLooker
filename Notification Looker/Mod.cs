@@ -13,7 +13,7 @@ using Notification_Looker.Settings;
 using Notification_Looker.Systems;
 using UnityEngine.InputSystem;
 
-namespace Notification_Looker
+namespace NotificationLooker
 {
     public class Mod : IMod
     {
@@ -21,7 +21,7 @@ namespace Notification_Looker
         public static string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
         public static string InformationalVersion => Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
-        public static ILog log = LogManager.GetLogger($"{nameof(Notification_Looker)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
+        public static ILog log = LogManager.GetLogger($"{nameof(NotificationLooker)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
         private Setting m_Setting;
 
         public void OnLoad(UpdateSystem updateSystem)
@@ -48,7 +48,7 @@ namespace Notification_Looker
                 GameManager.instance.localizationManager.AddSource(key, localisation[key]);
             }
 
-            AssetDatabase.global.LoadSettings(nameof(Notification_Looker), m_Setting, new Setting(this));
+            AssetDatabase.global.LoadSettings(nameof(NotificationLooker), m_Setting, new Setting(this));
 
             // Register custom update systems for UI
             updateSystem.UpdateAt<NotificationCountSystem>(SystemUpdatePhase.GameSimulation);

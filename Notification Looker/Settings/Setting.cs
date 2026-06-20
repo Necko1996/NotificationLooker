@@ -6,9 +6,9 @@ using Game.Settings;
 using Game.UI;
 using Game.UI.Widgets;
 
-namespace Notification_Looker.Settings
+namespace NotificationLooker.Settings
 {
-    [FileLocation(nameof(Notification_Looker))]
+    [FileLocation(nameof(NotificationLooker))]
     [SettingsUIGroupOrder(kButtonGroup)]
     [SettingsUIShowGroupName(kButtonGroup)]
     public class Setting : ModSetting
@@ -27,7 +27,7 @@ namespace Notification_Looker.Settings
 
         public override void SetDefaults()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         [SettingsUISection(kSection, kButtonGroup)]

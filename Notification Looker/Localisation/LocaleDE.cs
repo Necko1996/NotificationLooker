@@ -5,9 +5,9 @@ using Game.Modding;
 using Game.Settings;
 using Game.UI;
 using Game.UI.Widgets;
-using Setting = Notification_Looker.Settings.Setting;
+using Setting = NotificationLooker.Settings.Setting;
 
-namespace Notification_Looker.Localisation
+namespace NotificationLooker.Localisation
 {
     public class LocaleDE : IDictionarySource
     {
@@ -22,7 +22,7 @@ namespace Notification_Looker.Localisation
         {
             return new Dictionary<string, string>
             {
-                { m_Setting.GetSettingsLocaleID(), "Notification Looker" },
+                { m_Setting.GetSettingsLocaleID(), "NotificationLooker" },
                 { m_Setting.GetOptionTabLocaleID(Setting.kSection), "MainDE" },
 
                 { m_Setting.GetOptionGroupLocaleID(Setting.kButtonGroup), "Buttons1DE" },
