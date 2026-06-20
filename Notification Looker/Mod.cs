@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using Colossal.IO.AssetDatabase;
 using Colossal.Logging;
 using Game;
 using Game.Modding;
 using Game.SceneFlow;
-using Game.UI.Editor;
-using Notification_Looker.Localisation;
-using Notification_Looker.Settings;
-using Notification_Looker.Systems;
-using UnityEngine.InputSystem;
+using NotificationLooker.Localisation;
+using NotificationLooker.Settings;
+using NotificationLooker.Systems;
 
 namespace NotificationLooker
 {
@@ -52,7 +48,7 @@ namespace NotificationLooker
 
             // Register custom update systems for UI
             updateSystem.UpdateAt<NotificationCountSystem>(SystemUpdatePhase.GameSimulation);
-            updateSystem.UpdateAt<ModUI>(SystemUpdatePhase.UIUpdate);
+            updateSystem.UpdateAt<ModUISystem>(SystemUpdatePhase.UIUpdate);
         }
 
         public void OnDispose()
