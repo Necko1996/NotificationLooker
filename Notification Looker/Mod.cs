@@ -20,6 +20,8 @@ namespace NotificationLooker
         public static ILog log = LogManager.GetLogger($"{nameof(NotificationLooker)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
         private Setting m_Setting;
 
+        public static bool ShowPanel = false;
+
         public void OnLoad(UpdateSystem updateSystem)
         {
             log.Info(nameof(OnLoad));

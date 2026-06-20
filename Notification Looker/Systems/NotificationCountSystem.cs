@@ -1,28 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
-using Colossal.Serialization.Entities;
-using Colossal.UI;
 using Game;
 using Game.Common;
 using Game.Notifications;
 using Game.Prefabs;
-using Game.UI.InGame;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
-namespace Notification_Looker.Systems
+namespace NotificationLooker.Systems
 {
     public partial class NotificationCountSystem : GameSystemBase
     {
         private PrefabSystem prefabSystem;
         private EntityQuery iconQuery;
-        private EntityQuery notificationIconDisplayDataQuery;
-        private readonly Dictionary<Entity, int> listNotificaiton = new();
+
+        public readonly Dictionary<Entity, int> listNotificaiton = new();
+        public readonly List<NotificationItem> notificationList = new();
+
+        private readonly List<KeyValuePair<Entity, int>> sortedNotifications = new List<KeyValuePair<Entity, int>>();
+
+        public struct NotificationItem
+        {
+            public int entityIndex;
+            public int entityVersion;
+            public string name;
+            public string icon;
+            public int count;
+
+            public NotificationItem(Entity entity, string name, string icon, int count)
+            {
+                this.entityIndex = entity.Index;
+                this.entityVersion = entity.Version;
+                this.name = name;
+                this.icon = icon;
+                this.count = count;
+            }
+        }
 
         protected override void OnCreate()
         {
@@ -35,14 +48,6 @@ namespace Notification_Looker.Systems
                 ComponentType.ReadOnly<Icon>(),
                 ComponentType.Exclude<Deleted>()
             });
-
-            // All possible Icons
-            notificationIconDisplayDataQuery = GetEntityQuery(
-               new ComponentType[]
-               {
-                    ComponentType.ReadOnly<NotificationIconDisplayData>(),
-               }
-            );
         }
 
         public override int GetUpdateInterval(SystemUpdatePhase phase)
@@ -52,7 +57,9 @@ namespace Notification_Looker.Systems
 
         protected override void OnUpdate()
         {
+            sortedNotifications.Clear();
             listNotificaiton.Clear();
+            notificationList.Clear();
             var total = 0;
 
             NativeArray<ArchetypeChunk> nativeArray = iconQuery.ToArchetypeChunkArray(Allocator.TempJob);
@@ -78,18 +85,44 @@ namespace Notification_Looker.Systems
             }
 
             nativeArray.Dispose();
-            listNotificaiton.OrderByDescending(x => x.Value);
+            sortedNotifications.AddRange(listNotificaiton);
+            sortedNotifications.Sort((a, b) => b.Value.CompareTo(a.Value));
 
-            if (listNotificaiton.Any())
+            for (int i = 0; i < sortedNotifications.Count; i++)
             {
-                foreach (var item in listNotificaiton)
+                string prefabName = string.Empty;
+                string prefabIcon = string.Empty;
+
+                if (prefabSystem.TryGetPrefab<NotificationIconPrefab>(sortedNotifications[i].Key, out NotificationIconPrefab prefab))
                 {
-                    Mod.log.Info($"{prefabSystem.GetPrefab<NotificationIconPrefab>(item.Key).name} | {item.Value}");
+                    prefabName = prefab.name;
+                    prefabIcon = prefab.m_Icon.name;
                 }
+
+                notificationList.Add(new NotificationItem(sortedNotifications[i].Key, prefabName, prefabIcon, sortedNotifications[i].Value));
             }
 
-            Mod.log.Info($"Total: {total}");
-            Mod.log.Info($"--------------------------------");
+//            if (sortedItems.Any())
+//            {
+//                foreach (var item in sortedItems)
+//                {
+//                    Mod.log.Info($"{prefabSystem.GetPrefab<NotificationIconPrefab>(item.Key).name} | {item.Value}");
+//                }
+//            }
+//
+//            Mod.log.Info($"--------------------------------");
+//
+//            if (notificationList.Any())
+//            {
+//                foreach (NotificationItem item in notificationList)
+//                {
+//                    Mod.log.Info($"{item.name} | {item.icon} | {item.count} | Entity: {item.entityIndex}:{item.entityVersion}");
+//                }
+//            }
+//
+//            Mod.log.Info($"Total: {total}");
+//            Mod.log.Info($"--------------------------------");
+//            Mod.log.Info($"--------------------------------");
         }
 
         protected override void OnDestroy()
@@ -97,25 +130,8 @@ namespace Notification_Looker.Systems
             base.OnDestroy();
 
             listNotificaiton.Clear();
-
-            EntityManager.DestroyEntity(notificationIconDisplayDataQuery);
-            EntityManager.DestroyEntity(iconQuery);
-        }
-
-        public void DebugNotificationIconPrefab(EntityQuery query)
-        {
-            Mod.log.Info($"Debug NotificationIconPrefab");
-            
-            var entityArray = query.ToEntityArray(Allocator.TempJob);
-
-            foreach (var item in entityArray)
-            {
-                Mod.log.Info($"{prefabSystem.GetPrefab<NotificationIconPrefab>(item)}");
-            }
-
-            entityArray.Dispose();
-
-            Mod.log.Info($"Debug NotificationIconPrefab completed");
+            notificationList.Clear();
+            sortedNotifications.Clear();
         }
     }
 }
