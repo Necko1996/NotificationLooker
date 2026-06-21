@@ -13,8 +13,10 @@ export class UIEventName
 
     // Events from C# to UI for main panel.
     public static MainPanelUISettings: string = "mainPanelUISettings";
-    public static NotificationData = "notificationData";
-    public static NotificationClicked = "notificationClicked";
+    public static NotificationGroupedData: string = "notificationGroupedData";
+    public static NotificationItemData: string = "notificationItemData";
+
+    public static NotificationClicked: string = "notificationClicked";
 }
 
 export class UITranslationKey

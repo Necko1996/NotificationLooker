@@ -2,7 +2,7 @@
 
 import { UIEventName } from "./uiConstants";
 
-type NotificationItem = {
+type NotificationGrouped = {
     entityIndex: number;
     entityVersion: number;
     name: string;
@@ -10,6 +10,14 @@ type NotificationItem = {
     count: number;
 };
 
+type NotificationItem = { 
+    entityIndex: number;
+    entityVersion: number;
+    name: string;
+    icon: string;
+};
+
 // Main panel UI settings.
 export const bindingMainPanelUISettings = bindValue<boolean>(UIEventName.GroupName, UIEventName.MainPanelUISettings, false);
-export const notificationData = bindValue<NotificationItem[]>(UIEventName.GroupName, UIEventName.NotificationData, []);
+export const notificationGroupedData = bindValue<NotificationGrouped[]>(UIEventName.GroupName, UIEventName.NotificationGroupedData, []);
+export const notificationItemData = bindValue<NotificationItem[]>(UIEventName.GroupName, UIEventName.NotificationItemData, []);

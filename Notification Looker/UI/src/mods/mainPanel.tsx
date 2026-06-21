@@ -1,9 +1,9 @@
-﻿import { MouseEvent, useEffect, useRef, useState, WheelEvent } from "react";
+﻿import { MouseEvent, useEffect, useRef, useState, WheelEvent, useMemo } from "react";
 
 import { trigger, useValue } from "cs2/api";
 import { Panel } from "cs2/ui";
 
-import { bindingMainPanelUISettings, notificationData } from "./bindings";
+import { bindingMainPanelUISettings, notificationGroupedData, notificationItemData } from "./bindings";
 import { ModuleResolver } from "./moduleResolver";
 import { UIEventName, UITranslationKey } from "./uiConstants";
 
@@ -14,7 +14,8 @@ export const MainPanel = () =>
 {
 	const mainPanelUISetting: boolean = useValue(bindingMainPanelUISettings);
 
-    const notifications = useValue(notificationData);
+    const notificationsGrouped = useValue(notificationGroupedData);
+    const notificationsItem = useValue(notificationItemData);
 
 	const headingText: string = "Notification Looker";
 
@@ -28,10 +29,24 @@ export const MainPanel = () =>
     const notificationListContentRef = useRef<HTMLDivElement | null>(null);
     const [notificationScrollOffset, setNotificationScrollOffset] = useState(0);
 
+    const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+
     // Variables for dragging.
     let mainPanel: HTMLElement | null = null;
     let relativePositionX = 0.0;
     let relativePositionY = 0.0;
+
+    const itemsMapByGroupName = useMemo(() => {
+        const map: Record<string, typeof notificationsItem> = {};
+        for (let i = 0; i < notificationsItem.length; i++) {
+            const item = notificationsItem[i];
+            if (!map[item.name]) {
+                map[item.name] = [];
+            }
+            map[item.name].push(item);
+        }
+        return map;
+    }, [notificationsItem]);
 
     // Function to join classes.
     function joinClasses(...classes: any) { return classes.join(" "); }
@@ -161,10 +176,10 @@ export const MainPanel = () =>
         trigger(UIEventName.GroupName, UIEventName.MainButtonClicked)
     }
 
-    function onNotificationClick(entityIndex: number, entityVersion: number)
+    function onInstanceItemClick(entityIndex: number, entityVersion: number)
     {
         trigger("audio", "playSound", ModuleResolver.instance.UISound.selectItem, 1);
-
+        
         trigger(
             UIEventName.GroupName,
             UIEventName.NotificationClicked,
@@ -181,7 +196,7 @@ export const MainPanel = () =>
         {
             setNotificationScrollOffset(maxScroll);
         }
-    }, [notifications.length, notificationScrollOffset]);
+    }, [notificationsGrouped.length, notificationScrollOffset, expandedGroup]);
 
     function checkPositionOnWindow(positionX: number, positionY: number, elementWidth: number, elementHeight: number): {x: number, y: number}
     {
@@ -196,6 +211,12 @@ export const MainPanel = () =>
         // Return the checked position.
         return {x: positionX, y: positionY};
     }
+
+    const toggleGroupExpand = (groupName: string) => {
+        trigger("audio", "playSound", ModuleResolver.instance.UISound.selectItem, 1);
+
+        setExpandedGroup(expandedGroup === groupName ? null : groupName);
+    };
 
 	return (
         <>
@@ -228,40 +249,100 @@ export const MainPanel = () =>
                                 className={styles.notificationListContent}
                                 style={{ transform: `translateY(-${notificationScrollOffset}px)` }}
                             >
-                            {notifications.length === 0 && (
+                            {notificationsGrouped.length === 0 && (
                                 <div className={styles.emptyState}>
                                     No notifications found
                                 </div>
                             )}
 
-                            {notifications.map((item) => (
-                                <div className={styles.notificationRow}
-                                     key={`${item.entityIndex}:${item.entityVersion}`}
-                                     onClick={() => onNotificationClick(item.entityIndex, item.entityVersion)}
-                                >
-                                    <div className={styles.notificationIconBox}>
-                                        {
-                                            item.icon ? (
-                                                <img className={styles.notificationIcon} src={`Media/Game/Notifications/${item.icon}.svg`} />
-                                            ) : (
-                                                <div className={styles.notificationFallbackIcon}>
-                                                    !
+                            {notificationsGrouped.map((group) => {
+                                const isExpanded = expandedGroup === group.name;
+                                
+                                // Local high-performance client-side filtering matching the parent group context name
+                                const matchingInstances = itemsMapByGroupName[group.name] || [];
+
+                                return (
+                                    <div key={group.name} style={{ display: "flex", flexDirection: "column" }}>
+                                        {/* Main Group Header Row */}
+                                        <div className={styles.notificationRow} onClick={() => toggleGroupExpand(group.name)}>
+                                            <div className={styles.notificationIconBox}>
+                                                {group.icon ? (
+                                                    <img className={styles.notificationIcon} src={`Media/Game/Notifications/${group.icon}.svg`} />
+                                                ) : (
+                                                    <div className={styles.notificationFallbackIcon}>!</div>
+                                                )}
+                                            </div>
+
+                                            <div className={styles.notificationInfo}>
+                                                <div className={styles.notificationName}>
+                                                    {group.name || "Unknown notification"}
                                                 </div>
-                                            )
-                                        }
-                                    </div>
+                                            </div>
 
-                                    <div className={styles.notificationInfo}>
-                                        <div className={styles.notificationName}>
-                                            {item.name || "Unknown notification"}
+                                            <div className={styles.notificationCountBadge}>
+                                                {group.count}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className={styles.notificationCountBadge}>
-                                        {item.count}
+                                        {/* Child Instance Sub-List */}
+                                        {isExpanded && (
+                                            <div style={{ display: "flex", flexDirection: "column", paddingLeft: "16px", gap: "2px", marginBottom: "6px", contain: "layout paint style" }}>
+                                                {matchingInstances.slice(0, 50).map((instance) => (
+                                                    <div 
+                                                        className={styles.notificationRow}
+                                                        style={{ minHeight: "32px" }} // Slightly slimmer height profile to differentiate sub-items visually
+                                                        key={`${instance.entityIndex}:${instance.entityVersion}`}
+                                                        onClick={() => onInstanceItemClick(instance.entityIndex, instance.entityVersion)}
+                                                    >
+                                                        {/* Reusing the exact same indicator box layout for positioning details */}
+                                                        <div className={styles.notificationIconBox}>
+                                                            {group.icon ? (
+                                                                <img className={styles.notificationIcon} src={`Media/Game/Notifications/${instance.icon}.svg`} />
+                                                            ) : (
+                                                                <div className={styles.notificationFallbackIcon}>!</div>
+                                                            )}
+                                                        </div>
+
+                                                        <div 
+                                                            className={styles.notificationInfo}
+                                                            style={{ 
+                                                                    display: "flex", 
+                                                                    alignItems: "center", 
+                                                                    gap: "6px", 
+                                                                    whiteSpace: "nowrap", 
+                                                                    overflow: "hidden" 
+                                                                }}
+                                                        >
+                                                            <div className={styles.notificationName}>
+                                                                Target Instance
+                                                            </div>
+                                                            <span 
+                                                                style={{ 
+                                                                    fontSize: "11px", 
+                                                                    opacity: 0.5, 
+                                                                    fontFamily: "monospace",
+                                                                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                                                                    padding: "1px 4px",
+                                                                    borderRadius: "4px"
+                                                                }}
+                                                            >
+                                                                #{instance.entityIndex}:{instance.entityVersion}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+
+                                                {/* Optional indicator if items are hidden */}
+                                                {matchingInstances.length > 50 && (
+                                                    <div className={styles.emptyState} style={{ padding: "4px", fontSize: "12px", opacity: 0.7 }}>
+                                                        Showing first 50 of {matchingInstances.length} instances...
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                             </div>
                         </div>
                     </Panel >

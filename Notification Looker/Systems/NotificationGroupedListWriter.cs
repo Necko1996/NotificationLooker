@@ -3,15 +3,15 @@ using Colossal.UI.Binding;
 
 namespace NotificationLooker.Systems
 {
-    internal class NotificationListWriter : IWriter<List<NotificationCountSystem.NotificationItem>>
+    internal class NotificationGroupedListWriter : IWriter<List<NotificationGrouped>>
     {
-        public void Write(IJsonWriter writer, List<NotificationCountSystem.NotificationItem> value)
+        public void Write(IJsonWriter writer, List<NotificationGrouped> value)
         {
             writer.ArrayBegin(value.Count);
 
-            foreach (NotificationCountSystem.NotificationItem item in value)
+            foreach (NotificationGrouped item in value)
             {
-                writer.TypeBegin("notificationItem");
+                writer.TypeBegin("notificationGrouped");
 
                 writer.PropertyName("entityIndex");
                 writer.Write(item.entityIndex);

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Colossal.UI.Binding;
+using Game.Rendering;
+using Game.Tools;
 using Game.UI;
 using Unity.Entities;
 
@@ -18,11 +20,18 @@ namespace NotificationLooker.Systems
                 Mod.ShowPanel
             );
 
-        private ValueBinding<List<NotificationCountSystem.NotificationItem>> _bindingNotificationBinding = new ValueBinding<List<NotificationCountSystem.NotificationItem>>(
+        private ValueBinding<List<NotificationGrouped>> _bindingNotificationGroupedBinding = new ValueBinding<List<NotificationGrouped>>(
                 UIEventName.GroupName,
-                UIEventName.NotificationData,
-                new List<NotificationCountSystem.NotificationItem>(),
-                new NotificationListWriter()
+                UIEventName.NotificationGroupedData,
+                new List<NotificationGrouped>(),
+                new NotificationGroupedListWriter()
+            );
+
+        private ValueBinding<List<NotificationItem>> _bindingNotificationItemBinding = new ValueBinding<List<NotificationItem>>(
+                UIEventName.GroupName,
+                UIEventName.NotificationItemData,
+                new List<NotificationItem>(),
+                new NotificationItemListWriter()
             );
 
         protected override void OnCreate()
@@ -37,7 +46,10 @@ namespace NotificationLooker.Systems
             AddBinding(new TriggerBinding(UIEventName.GroupName, UIEventName.MainButtonClicked, MainButtonClicked));
 
             AddBinding(this._bindingMainPanelUISettings);
-            AddBinding(this._bindingNotificationBinding);
+            AddBinding(this._bindingNotificationGroupedBinding);
+            AddBinding(this._bindingNotificationItemBinding);
+
+            AddBinding(new TriggerBinding<int,int>(UIEventName.GroupName, UIEventName.NotificationClicked, NotificationClicked));
         }
 
         protected override void OnUpdate()
@@ -46,7 +58,7 @@ namespace NotificationLooker.Systems
 
             if (Mod.ShowPanel && _state.Advance())
             {
-                UpdateNotificationBinding();
+                UpdateNotificationGroupedBinding();
             }
         }
 
@@ -65,16 +77,45 @@ namespace NotificationLooker.Systems
             if(Mod.ShowPanel)
             {
                 _state.ForceUpdate();
-                UpdateNotificationBinding();
+                UpdateNotificationGroupedBinding();
             }
         }
 
-        private void UpdateNotificationBinding()
+        private void NotificationClicked(int entityIndex, int entityVersion)
         {
-            _bindingNotificationBinding.Update(
-               new List<NotificationCountSystem.NotificationItem>(
-                    m_notificationCountSystem.notificationList
+            Entity entity = new Entity { 
+                Index = entityIndex, 
+                Version = entityVersion 
+            };
+
+            if (EntityManager.Exists(entity))
+            {
+                var toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
+                var cameraSystem = World.GetOrCreateSystemManaged<CameraUpdateSystem>();
+
+                toolSystem.selected = entity;
+
+                if (cameraSystem != null)
+                {
+                    cameraSystem.orbitCameraController.followedEntity = entity;
+                    cameraSystem.orbitCameraController.TryMatchPosition(cameraSystem.activeCameraController);
+                    cameraSystem.activeCameraController = cameraSystem.orbitCameraController;
+                }
+            }
+        }
+
+        private void UpdateNotificationGroupedBinding()
+        {
+            _bindingNotificationGroupedBinding.Update(
+               new List<NotificationGrouped>(
+                    m_notificationCountSystem.notificationGroupedList
                )
+            );
+
+            _bindingNotificationItemBinding.Update(
+                new List<NotificationItem>(
+                    m_notificationCountSystem.notificationItemList
+                )
             );
         }
     }
