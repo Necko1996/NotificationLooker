@@ -5,12 +5,12 @@ City Watchdog helps reduce notification icon clutter in Cities Skylines II.
 Open the in-game City Watchdog panel to show or hide notification icons by category, or change individual alerts one by one.
 The mod also includes simple money tools and milestone setup.
 
-### What does mod do?
+### What does this mod do?
 
-- Mod collect all the notifications from around the city and place it in one UI
-- Mod provide counter per notification type
-- Clicking on each group of notification type, it gives you individual Notification below it
-- By clicking on individual notification you will get information about entity and your camera will jump to location
+- Mod collects all notifications from around the city and places it into one UI
+- Mod provides counter per notification type
+- Clicking on each group of notification type, it gives the user an individual Notification below it
+- By clicking on individual notification the user will get information about entity and user's camera will jump to location
 
 ### Support and feedback
 

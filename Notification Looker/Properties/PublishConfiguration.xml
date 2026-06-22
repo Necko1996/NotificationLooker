@@ -8,12 +8,12 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="Mod collect all the notifications from around the city and place it in one UI" /-->
 	<LongDescription>
-### What does mod do?
+### What does this mod do?
 
-- Mod collect all the notifications from around the city and place it in one UI
-- Mod provide counter per notification type
-- Clicking on each group of notification type, it gives you individual Notification below it
-- By clicking on individual notification you will get information about entity and your camera will jump to location
+- Mod collects all notifications from around the city and places it into one UI
+- Mod provides counter per notification type
+- Clicking on each group of notification type, it gives the user an individual Notification below it
+- By clicking on individual notification the user will get information about entity and user's camera will jump to location
 
 ### Support and feedback
 
@@ -26,6 +26,7 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 - Necko1996 - author/maintainer
 - Thanks to rcav8tr - partialy used his UI code
 - Thanks to krzychu124 - suggestions and explaining how CS2 works
+- Thanks to River-mochi - testing and UI idea
 
 	</LongDescription>
 	
@@ -42,9 +43,9 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/notification-looker.1930656/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0.0" />
+	<ModVersion Value="1.0.1" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.5.*" />
+	<GameVersion Value="1.6.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Required DLC, can be set multiple times. Supported values are "Landmark Buildings", "San Fransisco Set", "Beach Properties", "Urban Promenades", "Modern Architecture"-->
@@ -52,9 +53,9 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 	
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-## v1.0.0
+## v1.0.1
 
-- Initial Release
+- Update to game version 1.6.*
 	
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->
