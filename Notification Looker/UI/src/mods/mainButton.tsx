@@ -9,7 +9,7 @@ import icon from "images/notification-icon.svg";
 export const MainButton = () => {
 
     // Get main panel UI settings.
-    const mainPanelUISetting: boolean = useValue(bindingMainPanelUISettings);
+    const mainPanelUISetting = useValue(bindingMainPanelUISettings);
 
     return (
         <DescriptionTooltipWithKeyBind
@@ -20,7 +20,7 @@ export const MainButton = () => {
             <Button
                 src={icon}
                 variant="floating"
-                selected={mainPanelUISetting}
+                selected={mainPanelUISetting.mainPanelShow}
                 onSelect={() => trigger(UIEventName.GroupName, UIEventName.MainButtonClicked)}
             />
         </DescriptionTooltipWithKeyBind>

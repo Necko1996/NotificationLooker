@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using Colossal;
-using Colossal.IO.AssetDatabase;
+﻿using Colossal.IO.AssetDatabase;
 using Game.Modding;
 using Game.Settings;
-using Game.UI;
-using Game.UI.Widgets;
 
 namespace NotificationLooker.Settings
 {
@@ -20,6 +16,15 @@ namespace NotificationLooker.Settings
         //public const string kSliderGroup = "Slider";
         //public const string kDropdownGroup = "Dropdown";
 
+        [SettingsUIHidden]
+        public bool MainPanelShow { get; set; }
+
+        [SettingsUIHidden]
+        public float MainPanelX { get; set; } = 55f;
+
+        [SettingsUIHidden]
+        public float MainPanelY { get; set; } = 175f;
+
         public Setting(IMod mod) : base(mod)
         {
 
@@ -27,7 +32,9 @@ namespace NotificationLooker.Settings
 
         public override void SetDefaults()
         {
-            
+            MainPanelShow = false;
+            MainPanelX = 55f;
+            MainPanelY = 175f;
         }
 
         [SettingsUISection(kSection, kButtonGroup)]

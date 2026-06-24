@@ -24,10 +24,10 @@ namespace NotificationLooker.Systems
             prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 
             // Active Icons
-            iconQuery = GetEntityQuery(new ComponentType[] {
-                ComponentType.ReadOnly<Icon>(),
-                ComponentType.Exclude<Deleted>()
-            });
+            iconQuery = SystemAPI.QueryBuilder()
+                .WithAll<Icon>()
+                .WithNone<Deleted>()
+                .Build();
         }
 
         public override int GetUpdateInterval(SystemUpdatePhase phase)
@@ -42,9 +42,9 @@ namespace NotificationLooker.Systems
             notificationGroupedList.Clear();
             notificationItemList.Clear();
 
-            var prefabRefHandle = GetComponentTypeHandle<PrefabRef>(true);
+            var prefabRefHandle = SystemAPI.GetComponentTypeHandle<PrefabRef>(true);
             //var iconHandle = GetComponentTypeHandle<Icon>(true);
-            var entityTypeHandle = GetEntityTypeHandle();
+            var entityTypeHandle = SystemAPI.GetEntityTypeHandle();
 
             using (var chunks = iconQuery.ToArchetypeChunkArray(Allocator.TempJob))
             {

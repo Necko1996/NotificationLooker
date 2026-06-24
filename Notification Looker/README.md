@@ -22,7 +22,8 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 ### Credits
 - Necko1996 - author/maintainer
 - Thanks to rcav8tr - partialy used his UI code
-- Thanks to krzychu124 - suggestions and explaining how CS2 works
+- Thanks to krzychu124 - code review, suggestions and explaining how CS2 works
+- Thanks to River-mochi - testing and UI idea
 
 ## Links
 

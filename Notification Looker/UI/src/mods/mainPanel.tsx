@@ -1,4 +1,5 @@
-﻿import { MouseEvent, useEffect, useRef, useState, WheelEvent, useMemo } from "react";
+﻿import { MouseEvent, useEffect, useRef, useState, WheelEvent, useMemo, useCallback } from "react";
+import classNames from "classnames";
 
 import { trigger, useValue } from "cs2/api";
 import { Panel } from "cs2/ui";
@@ -12,29 +13,36 @@ import icon from "images/notification-icon.svg";
 
 export const MainPanel = () =>
 {
-	const mainPanelUISetting: boolean = useValue(bindingMainPanelUISettings);
+	const mainPanelUISetting = useValue(bindingMainPanelUISettings);
 
     const notificationsGrouped = useValue(notificationGroupedData);
     const notificationsItem = useValue(notificationItemData);
 
 	const headingText: string = "Notification Looker";
 
-    const elementIDPrefix: string = "notification-looker-";
-
     // Define an element ID for each element that is top level or that needs to be found by ID.
+    const elementIDPrefix: string = "notification-looker-";
     const MainPanelID: string = elementIDPrefix + "main-panel";
     const MainPanelCloseID: string = elementIDPrefix + "main-panel-close";
 
     const notificationListRef = useRef<HTMLDivElement | null>(null);
     const notificationListContentRef = useRef<HTMLDivElement | null>(null);
     const [notificationScrollOffset, setNotificationScrollOffset] = useState(0);
-
     const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+    const [panelPosition, setPanelPosition] = useState({ x: mainPanelUISetting.mainPanelX, y: mainPanelUISetting.mainPanelX });
+
+    useEffect(() => {
+		if (mainPanelUISetting && mainPanelUISetting.mainPanelX > 0 && mainPanelUISetting.mainPanelY > 0) {
+			setPanelPosition({ x: mainPanelUISetting.mainPanelX, y: mainPanelUISetting.mainPanelY });
+		}
+	}, [mainPanelUISetting.mainPanelX, mainPanelUISetting.mainPanelY]);
 
     // Variables for dragging.
-    let mainPanel: HTMLElement | null = null;
-    let relativePositionX = 0.0;
-    let relativePositionY = 0.0;
+    const dragRef = useRef({
+		mainPanel: null as HTMLElement | null,
+		relativePositionX: 0,
+		relativePositionY: 0
+	});
 
     const itemsMapByGroupName = useMemo(() => {
         const map: Record<string, typeof notificationsItem> = {};
@@ -47,9 +55,6 @@ export const MainPanel = () =>
         }
         return map;
     }, [notificationsItem]);
-
-    // Function to join classes.
-    function joinClasses(...classes: any) { return classes.join(" "); }
 
     function getNotificationMaxScroll(): number
     {
@@ -84,89 +89,71 @@ export const MainPanel = () =>
 
     // Start dragging.
     // Dragging is initiated by mouse down on the panel header, but it is the whole panel that is moved.
-    function onMouseDown(e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>)
-    {
-        // Ignore mouse down if other than left mouse button.
-        if (e.button !== 0)
-        {
-            return;
-        }
+    const onMouseDown = useCallback((e: MouseEvent<HTMLDivElement>) => {
+		if (e.button !== 0) return;
 
-        // Get close button.
-        const closeButton = document.getElementById(MainPanelCloseID);
-        if (closeButton)
-        {
-            // Ignore mouse down if over the close button.
-            const closeButtonRect = closeButton.getBoundingClientRect();
-            if (e.clientX >= closeButtonRect.left && e.clientX <= closeButtonRect.left + closeButtonRect.width &&
-                e.clientY >= closeButtonRect.top && e.clientY <= closeButtonRect.top + closeButtonRect.height)
-            {
-                return;
-            }
-        }
+		const closeButton = document.getElementById(MainPanelCloseID);
+		if (closeButton) {
+			const closeButtonRect = closeButton.getBoundingClientRect();
+			if (e.clientX >= closeButtonRect.left && e.clientX <= closeButtonRect.left + closeButtonRect.width &&
+				e.clientY >= closeButtonRect.top && e.clientY <= closeButtonRect.top + closeButtonRect.height) {
+				return;
+			}
+		}
 
-        // Get main panel.
-        mainPanel = document.getElementById(MainPanelID);
-        if (mainPanel)
-        {
-            // Save the position of the mouse relative to the main panel.
-            const mainPanelRect = mainPanel.getBoundingClientRect();
-            relativePositionX = e.clientX - mainPanelRect.left;
-            relativePositionY = e.clientY - mainPanelRect.top;
+		const panel = document.getElementById(MainPanelID);
+		if (panel) {
+			const mainPanelRect = panel.getBoundingClientRect();
+			
+			dragRef.current = {
+				mainPanel: panel,
+				relativePositionX: e.clientX - mainPanelRect.left,
+				relativePositionY: e.clientY - mainPanelRect.top
+			};
 
-            // Add mouse event listeners.
-            window.addEventListener("mousemove", onMouseMove);
-            window.addEventListener("mouseup", onMouseUp);
+			window.addEventListener("mousemove", onMouseMove);
+			window.addEventListener("mouseup", onMouseUp);
 
-            // Stop event propagation.
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    }
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}, [panelPosition]);
 
     // Move the main panel while dragging.
-    function onMouseMove(e: { clientX: number; clientY: number; stopPropagation: () => void; preventDefault: () => void; })
-    {
-        // Check if main panel is valid.
-        if (mainPanel)
-        {
-            // Compute new panel position based on current mouse position.
-            // Adjusting by relative position while dragging keeps the panel in the same location
-            // under the pointer as when the panel was originally clicked to start dragging.
-            const newPosition = { x: e.clientX - relativePositionX, y: e.clientY - relativePositionY };
+    function onMouseMove(e: globalThis.MouseEvent) {
+		const { mainPanel, relativePositionX, relativePositionY } = dragRef.current;
+		if (mainPanel) {
+			const newPositionX = e.clientX - relativePositionX;
+			const newPositionY = e.clientY - relativePositionY;
 
-            // Prevent any part of panel from going outside the window.
-            const mainPanelRect = mainPanel.getBoundingClientRect();
-            const checkedPosition = checkPositionOnWindow(newPosition.x, newPosition.y, mainPanelRect.width, mainPanelRect.height);
+			const mainPanelRect = mainPanel.getBoundingClientRect();
+			const checkedPosition = checkPositionOnWindow(newPositionX, newPositionY, mainPanelRect.width, mainPanelRect.height);
 
-            // Move panel to checked position.
-            mainPanel.style.left = checkedPosition.x + "px";
-            mainPanel.style.top  = checkedPosition.y + "px";
-
-            // Stop event propagation.
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    }
+			mainPanel.style.left = checkedPosition.x + "px";
+			mainPanel.style.top = checkedPosition.y + "px";
+		}
+	}
 
     // Finish dragging.
-    function onMouseUp(e: { stopPropagation: () => void; preventDefault: () => void; })
-    {
-        // Check if main panel is valid.
-        if (mainPanel)
-        {
-            // Remove mouse event listeners.
-            window.removeEventListener("mousemove", onMouseMove);
-            window.removeEventListener("mouseup", onMouseUp);
+    function onMouseUp(e: globalThis.MouseEvent) {
+		if (dragRef.current.mainPanel) {
+			window.removeEventListener("mousemove", onMouseMove);
+			window.removeEventListener("mouseup", onMouseUp);
 
-            // Trigger main panel moved event.
+			const { mainPanel, relativePositionX, relativePositionY } = dragRef.current;
+
+            const finalX = e.clientX - relativePositionX;
+            const finalY = e.clientY - relativePositionY;
+
             const mainPanelRect = mainPanel.getBoundingClientRect();
+            const checkedPosition = checkPositionOnWindow(finalX, finalY, mainPanelRect.width, mainPanelRect.height);
 
-            // Stop event propagation.
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    }
+            setPanelPosition(checkedPosition);
+            dragRef.current.mainPanel = null;
+
+			trigger(UIEventName.GroupName, UIEventName.MainPanelMoved, checkedPosition.x, checkedPosition.y);
+		}
+	}
 
     // Handle click on close button.
     // Click on close button is same as click on activation button.
@@ -188,15 +175,19 @@ export const MainPanel = () =>
         );
     }
 
-    useEffect(() =>
-    {
-        const maxScroll = getNotificationMaxScroll();
+    useEffect(() => {
+		return () => {
+			window.removeEventListener("mousemove", onMouseMove);
+			window.removeEventListener("mouseup", onMouseUp);
+		};
+	}, []);
 
-        if (notificationScrollOffset > maxScroll)
-        {
-            setNotificationScrollOffset(maxScroll);
-        }
-    }, [notificationsGrouped.length, notificationScrollOffset, expandedGroup]);
+	useEffect(() => {
+		const maxScroll = getNotificationMaxScroll();
+		if (notificationScrollOffset > maxScroll) {
+			setNotificationScrollOffset(maxScroll);
+		}
+	}, [notificationsGrouped.length, expandedGroup, getNotificationMaxScroll]);
 
     function checkPositionOnWindow(positionX: number, positionY: number, elementWidth: number, elementHeight: number): {x: number, y: number}
     {
@@ -221,19 +212,20 @@ export const MainPanel = () =>
 	return (
         <>
             {
-                mainPanelUISetting &&
+                mainPanelUISetting.mainPanelShow &&
                 (
                     <Panel
                         id={MainPanelID}
                         className={styles.mainPanel}
+                        style={{ left: `${panelPosition.x}px`, top: `${panelPosition.y}px` }}
                         header={(
-                            <div className={styles.mainPanelHeader} onMouseDown={(e) => onMouseDown(e)}>
+                            <div className={styles.mainPanelHeader} onMouseDown={onMouseDown}>
                                 <img className={ModuleResolver.instance.PanelClasses.icon} src={icon} />
-                                <div className={joinClasses(ModuleResolver.instance.PanelThemeClasses.title, styles.mainPanelHeaderTitle)}>
+                                <div className={classNames(ModuleResolver.instance.PanelThemeClasses.title, styles.mainPanelHeaderTitle)}>
                                     {headingText}
                                 </div>
-                                <button id={MainPanelCloseID} className={joinClasses(ModuleResolver.instance.PanelClasses.closeButton, ModuleResolver.instance.RoundHighlightButtonClasses.button, styles.mainPanelHeaderClose)} onClick={() => onCloseClick()}>
-                                    <div className={joinClasses(ModuleResolver.instance.TintedIconClasses.tintedIcon, ModuleResolver.instance.IconButtonClasses.icon)} style={{ maskImage: "url(Media/Glyphs/Close.svg)" }}>
+                                <button id={MainPanelCloseID} className={classNames(ModuleResolver.instance.PanelClasses.closeButton, ModuleResolver.instance.RoundHighlightButtonClasses.button, styles.mainPanelHeaderClose)} onClick={onCloseClick}>
+                                    <div className={classNames(ModuleResolver.instance.TintedIconClasses.tintedIcon, ModuleResolver.instance.IconButtonClasses.icon)} style={{ maskImage: "url(Media/Glyphs/Close.svg)" }}>
                                     </div>
                                 </button>
                             </div>
@@ -242,12 +234,12 @@ export const MainPanel = () =>
                         <div
                             ref={notificationListRef}
                             className={styles.notificationList}
-                            onWheel={(e) => onNotificationWheel(e)}
+                            onWheel={onNotificationWheel}
                         >
                             <div
                                 ref={notificationListContentRef}
                                 className={styles.notificationListContent}
-                                style={{ transform: `translateY(-${notificationScrollOffset}px)` }}
+                                style={{ transform: `translate3d(0, -${notificationScrollOffset}px, 0)` }}
                             >
                             {notificationsGrouped.length === 0 && (
                                 <div className={styles.emptyState}>

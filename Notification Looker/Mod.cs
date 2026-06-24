@@ -18,9 +18,7 @@ namespace NotificationLooker
         public static string InformationalVersion => Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
         public static ILog log = LogManager.GetLogger($"{nameof(NotificationLooker)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
-        private Setting m_Setting;
-
-        public static bool ShowPanel = false;
+        public static Setting m_Setting { get; private set; }
 
         public void OnLoad(UpdateSystem updateSystem)
         {

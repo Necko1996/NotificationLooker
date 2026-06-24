@@ -11,13 +11,12 @@ namespace NotificationLooker.Systems
 
         // Events from UI to C#.
         public const string MainButtonClicked = "mainButtonClicked";
+        public const string MainPanelUISettings = "mainPanelUISettings";
         public const string MainPanelMoved = "mainPanelMoved";
 
         // Events from C# to UI for main panel.
-        public const string MainPanelUISettings = "mainPanelUISettings";
         public const string NotificationGroupedData = "notificationGroupedData";
         public const string NotificationItemData = "notificationItemData";
-
         public const string NotificationClicked = "notificationClicked";
     }
 

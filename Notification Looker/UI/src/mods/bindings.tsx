@@ -17,7 +17,13 @@ type NotificationItem = {
     icon: string;
 };
 
+type MainPanelSettings = {
+    mainPanelShow: boolean;
+    mainPanelX: number;
+    mainPanelY: number;
+}
+
 // Main panel UI settings.
-export const bindingMainPanelUISettings = bindValue<boolean>(UIEventName.GroupName, UIEventName.MainPanelUISettings, false);
+export const bindingMainPanelUISettings = bindValue<MainPanelSettings>(UIEventName.GroupName, UIEventName.MainPanelUISettings);
 export const notificationGroupedData = bindValue<NotificationGrouped[]>(UIEventName.GroupName, UIEventName.NotificationGroupedData, []);
 export const notificationItemData = bindValue<NotificationItem[]>(UIEventName.GroupName, UIEventName.NotificationItemData, []);

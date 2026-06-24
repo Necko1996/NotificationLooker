@@ -25,7 +25,7 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 ### Credits
 - Necko1996 - author/maintainer
 - Thanks to rcav8tr - partialy used his UI code
-- Thanks to krzychu124 - suggestions and explaining how CS2 works
+- Thanks to krzychu124 - code review, suggestions and explaining how CS2 works
 - Thanks to River-mochi - testing and UI idea
 
 	</LongDescription>
@@ -43,7 +43,7 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/notification-looker.1930656/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0.1" />
+	<ModVersion Value="1.1.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.6.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -53,9 +53,12 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 	
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-## v1.0.1
+## v1.1.0
 
-- Update to game version 1.6.*
+- Improvement on how mod gets data
+- New Feature! - Mod now remembers open or closed state, and remembers position of panel.
+- Fixed UI warrnings
+- Slight performance improvement on UI side
 	
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->

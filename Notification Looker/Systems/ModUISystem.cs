@@ -4,6 +4,7 @@ using Game.Rendering;
 using Game.Tools;
 using Game.UI;
 using Unity.Entities;
+using NotificationLooker.Settings;
 
 namespace NotificationLooker.Systems
 {
@@ -13,11 +14,14 @@ namespace NotificationLooker.Systems
 
         private NotificationCountSystem m_notificationCountSystem;
 
+        private Setting m_Settings;
+
         // C# to UI bindings for main panel.
-        private ValueBinding<bool> _bindingMainPanelUISettings = new ValueBinding<bool>(
+        private ValueBinding<Setting> _bindingMainPanelUISettings = new ValueBinding<Setting>(
                 UIEventName.GroupName,
                 UIEventName.MainPanelUISettings,
-                Mod.ShowPanel
+                Mod.m_Setting,
+                new MainPanelUISettingsWriter()
             );
 
         private ValueBinding<List<NotificationGrouped>> _bindingNotificationGroupedBinding = new ValueBinding<List<NotificationGrouped>>(
@@ -41,6 +45,7 @@ namespace NotificationLooker.Systems
             _state = UIUpdateState.Create(World, 512);
 
             m_notificationCountSystem = World.GetOrCreateSystemManaged<NotificationCountSystem>();
+            m_Settings = Mod.m_Setting;
 
             // Add bindings for UI to C#.
             AddBinding(new TriggerBinding(UIEventName.GroupName, UIEventName.MainButtonClicked, MainButtonClicked));
@@ -50,13 +55,14 @@ namespace NotificationLooker.Systems
             AddBinding(this._bindingNotificationItemBinding);
 
             AddBinding(new TriggerBinding<int,int>(UIEventName.GroupName, UIEventName.NotificationClicked, NotificationClicked));
+            AddBinding(new TriggerBinding<float, float>(UIEventName.GroupName, UIEventName.MainPanelMoved, MainPanelMoved));
         }
 
         protected override void OnUpdate()
         {
             base.OnUpdate();
 
-            if (Mod.ShowPanel && _state.Advance())
+            if (m_Settings.MainPanelShow && _state.Advance())
             {
                 UpdateNotificationGroupedBinding();
             }
@@ -69,23 +75,40 @@ namespace NotificationLooker.Systems
         private void MainButtonClicked()
         {
             // Toggle main panel visibility.
-            Mod.ShowPanel = !Mod.ShowPanel;
+            m_Settings.MainPanelShow = !m_Settings.MainPanelShow;
 
+            m_Settings.ApplyAndSave();
             // Send new visbility back to UI.
-            _bindingMainPanelUISettings.Update(Mod.ShowPanel);
+            _bindingMainPanelUISettings.TriggerUpdate();
 
-            if(Mod.ShowPanel)
+            if(m_Settings.MainPanelShow)
             {
                 _state.ForceUpdate();
                 UpdateNotificationGroupedBinding();
             }
         }
 
+        private void UpdateNotificationGroupedBinding()
+        {
+            _bindingNotificationGroupedBinding.Update(
+               new List<NotificationGrouped>(
+                    m_notificationCountSystem.notificationGroupedList
+               )
+            );
+
+            _bindingNotificationItemBinding.Update(
+                new List<NotificationItem>(
+                    m_notificationCountSystem.notificationItemList
+                )
+            );
+        }
+
         private void NotificationClicked(int entityIndex, int entityVersion)
         {
-            Entity entity = new Entity { 
-                Index = entityIndex, 
-                Version = entityVersion 
+            Entity entity = new Entity
+            {
+                Index = entityIndex,
+                Version = entityVersion
             };
 
             if (EntityManager.Exists(entity))
@@ -104,19 +127,14 @@ namespace NotificationLooker.Systems
             }
         }
 
-        private void UpdateNotificationGroupedBinding()
+        private void MainPanelMoved(float positionX, float positionY)
         {
-            _bindingNotificationGroupedBinding.Update(
-               new List<NotificationGrouped>(
-                    m_notificationCountSystem.notificationGroupedList
-               )
-            );
+            m_Settings.MainPanelX = positionX;
+            m_Settings.MainPanelY = positionY;
 
-            _bindingNotificationItemBinding.Update(
-                new List<NotificationItem>(
-                    m_notificationCountSystem.notificationItemList
-                )
-            );
+            m_Settings.ApplyAndSave();
+
+            _bindingMainPanelUISettings.TriggerUpdate();
         }
     }
 }
