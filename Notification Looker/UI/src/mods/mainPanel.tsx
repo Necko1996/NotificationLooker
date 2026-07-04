@@ -7,6 +7,7 @@ import { Panel } from "cs2/ui";
 import { bindingMainPanelUISettings, notificationGroupedData, notificationItemData } from "./bindings";
 import { ModuleResolver } from "./moduleResolver";
 import { UIEventName, UITranslationKey } from "./uiConstants";
+import { NotificationIcon } from "./notificationIcon";
 
 import styles from "./mainPanel.module.scss";
 import icon from "images/notification-icon.svg";
@@ -258,11 +259,7 @@ export const MainPanel = () =>
                                         {/* Main Group Header Row */}
                                         <div className={styles.notificationRow} onClick={() => toggleGroupExpand(group.name)}>
                                             <div className={styles.notificationIconBox}>
-                                                {group.icon ? (
-                                                    <img className={styles.notificationIcon} src={`Media/Game/Notifications/${group.icon}.svg`} />
-                                                ) : (
-                                                    <div className={styles.notificationFallbackIcon}>!</div>
-                                                )}
+                                                <NotificationIcon iconName={group.icon} />
                                             </div>
 
                                             <div className={styles.notificationInfo}>
@@ -288,11 +285,7 @@ export const MainPanel = () =>
                                                     >
                                                         {/* Reusing the exact same indicator box layout for positioning details */}
                                                         <div className={styles.notificationIconBox}>
-                                                            {group.icon ? (
-                                                                <img className={styles.notificationIcon} src={`Media/Game/Notifications/${instance.icon}.svg`} />
-                                                            ) : (
-                                                                <div className={styles.notificationFallbackIcon}>!</div>
-                                                            )}
+                                                            <NotificationIcon iconName={instance.icon} />
                                                         </div>
 
                                                         <div 

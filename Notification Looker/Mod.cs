@@ -37,7 +37,6 @@ namespace NotificationLooker
             // Load Localisations
             IDictionary<string, Colossal.IDictionarySource> localisation = new Dictionary<string, Colossal.IDictionarySource>();
             localisation.Add("en-US", new LocaleEN(m_Setting));
-            localisation.Add("de-DE", new LocaleDE(m_Setting));
 
             foreach (string key in localisation.Keys)
             {
