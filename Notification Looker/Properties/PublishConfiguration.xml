@@ -43,7 +43,7 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/notification-looker.1930656/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.1.1" />
+	<ModVersion Value="1.2.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.6.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -53,11 +53,11 @@ Support provided to on [Cities: Skylines Modding > Notification Looker](https://
 	
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-## v1.1.1
+## v1.2.0
 
-- Settings cleanup
-- Better handling of notification icons
-- Fixed UI error for notificaiton icons
+- Better UI scale for 2k, 4k and 8k resolutions
+- Added new mini panel with top 5 notifications (can be dragged around, position is saved)
+- Main button is now bundled with mini panel
 	
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->

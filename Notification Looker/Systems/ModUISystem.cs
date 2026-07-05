@@ -54,17 +54,24 @@ namespace NotificationLooker.Systems
             AddBinding(this._bindingNotificationGroupedBinding);
             AddBinding(this._bindingNotificationItemBinding);
 
-            AddBinding(new TriggerBinding<int,int>(UIEventName.GroupName, UIEventName.NotificationClicked, NotificationClicked));
+            AddBinding(new TriggerBinding<int, int>(UIEventName.GroupName, UIEventName.NotificationClicked, NotificationClicked));
+
             AddBinding(new TriggerBinding<float, float>(UIEventName.GroupName, UIEventName.MainPanelMoved, MainPanelMoved));
+            AddBinding(new TriggerBinding<float, float>(UIEventName.GroupName, UIEventName.MainButtonMoved, MainButtonMoved));
         }
 
         protected override void OnUpdate()
         {
             base.OnUpdate();
 
-            if (m_Settings.MainPanelShow && _state.Advance())
+            if (_state.Advance())
             {
                 UpdateNotificationGroupedBinding();
+
+                if (m_Settings.MainPanelShow)
+                {
+                    UpdateNotificationItemBinding();
+                }
             }
         }
 
@@ -81,10 +88,12 @@ namespace NotificationLooker.Systems
             // Send new visbility back to UI.
             _bindingMainPanelUISettings.TriggerUpdate();
 
-            if(m_Settings.MainPanelShow)
+            UpdateNotificationGroupedBinding();
+
+            if (m_Settings.MainPanelShow)
             {
                 _state.ForceUpdate();
-                UpdateNotificationGroupedBinding();
+                UpdateNotificationItemBinding();
             }
         }
 
@@ -95,7 +104,10 @@ namespace NotificationLooker.Systems
                     m_notificationCountSystem.notificationGroupedList
                )
             );
+        }
 
+        private void UpdateNotificationItemBinding()
+        {
             _bindingNotificationItemBinding.Update(
                 new List<NotificationItem>(
                     m_notificationCountSystem.notificationItemList
@@ -131,6 +143,16 @@ namespace NotificationLooker.Systems
         {
             m_Settings.MainPanelX = positionX;
             m_Settings.MainPanelY = positionY;
+
+            m_Settings.ApplyAndSave();
+
+            _bindingMainPanelUISettings.TriggerUpdate();
+        }
+
+        private void MainButtonMoved(float positionX, float positionY)
+        {
+            m_Settings.MainButtonX = positionX;
+            m_Settings.MainButtonY = positionY;
 
             m_Settings.ApplyAndSave();
 

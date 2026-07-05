@@ -7,8 +7,10 @@ export class UIEventName
     // Events group name.
     public static GroupName: string = "NotificationLooker";
 
-    // Events from UI to C#.
     public static MainButtonClicked: string = "mainButtonClicked";
+    public static MainButtonMoved: string = "mainButtonMoved";
+
+    // Events from UI to C#.
     public static MainPanelUISettings: string = "mainPanelUISettings";
     public static MainPanelMoved: string = "mainPanelMoved";
 

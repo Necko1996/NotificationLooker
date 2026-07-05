@@ -1,0 +1,74 @@
+.nlMainToolbarContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14rem; 
+  background: rgba(24, 28, 36, 0.4);
+  padding: 8rem;
+  border-radius: 6rem;
+  backdrop-filter: blur(4rem);
+}
+
+.nlOverviewList {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24rem;
+  padding-left: 6rem;
+}
+
+.nlOverviewCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 32rem;
+  margin-left: 6rem; 
+  margin-right: 6rem;
+}
+
+.nlIconContainer {
+  width: 28rem;
+  height: 28rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4rem;
+
+  // Adjusts inner SVG/Img elements to render crisp and scale correctly
+  img, svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.nlCountBadge {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+  span {
+    color: #ffffff;
+    font-size: 13rem;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0rem 1rem 3rem rgba(0, 0, 0, 0.75);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.1rem;
+    text-align: center;
+  }
+}
+
+.nlDraggableWrapper {
+  position: absolute; // Detaches it from permanent document flow
+  z-index: 9999;     // Ensures it renders over standard asset panels
+  cursor: grab;
+  user-select: none;
+  left: 500px;
+  top: 0px;
+
+  &:active {
+    cursor: grabbing; // Visual feedback while dragging
+  }
+}

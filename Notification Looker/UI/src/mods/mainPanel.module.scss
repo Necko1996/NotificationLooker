@@ -1,54 +1,54 @@
 .mainPanel {
     position: absolute;
     opacity: 1;
-    margin: 0px;
-    width: 390px;
-    max-height: 520px;
+    margin: 0rem;
+    width: 390rem;
+    max-height: 520rem;
     top: 175px;
     left: 55px;
-    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.45);
+    box-shadow: 0rem 4rem 14rem rgba(0, 0, 0, 0.45);
     background: rgba(25, 55, 66, 0.96);
     color: #ffffff;
-    border-radius: 12px 12px 0 0;
+    border-radius: 12rem 12rem 0 0;
 }
 
 .mainPanelHeader {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 0 10px;
-    border-radius: 6px 6px 0 0;
+    gap: 10rem;
+    padding: 0 10rem;
+    border-radius: 6rem 6rem 0 0;
 }
 
 .mainPanelHeader img {
-    width: 24px;
-    height: 24px;
+    width: 24rem;
+    height: 24rem;
     object-fit: contain;
 }
 
 .mainPanelHeaderTitle {
     flex: 1;
     color: #72d8ff;
-    font-size: 15px;
+    font-size: 15rem;
     font-weight: 500;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.6rem;
     text-transform: uppercase;
 }
 
 .mainPanelHeaderClose {
-    width: 24px;
-    height: 24px;
+    width: 24rem;
+    height: 24rem;
     opacity: 0.95;
 }
 
 .notificationList {
-    height: 420px;
+    height: 420rem;
     overflow: hidden;
     position: relative;
-    padding: 8px;
+    padding: 8rem;
     background: rgba(32, 63, 74, 0.95);
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6rem 6rem;
 }
 
 .notificationListContent {
@@ -57,15 +57,15 @@
 }
 
 .notificationRow {
-    min-height: 36px;
+    min-height: 36rem;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 5px;
-    padding: 5px 8px;
+    gap: 8rem;
+    margin-bottom: 5rem;
+    padding: 5rem 8rem;
     background: rgba(70, 95, 107, 0.86);
-    border-radius: 3px;
-    border: 1px solid rgba(120, 160, 175, 0.14);
+    border-radius: 3rem;
+    border: 1rem solid rgba(120, 160, 175, 0.14);
 }
 
 .notificationRow:hover {
@@ -81,32 +81,32 @@
 }
 
 .notificationIconBox {
-    width: 24px;
-    height: 24px;
-    flex: 0 0 24px;
+    width: 24rem;
+    height: 24rem;
+    flex: 0 0 24rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 3px;
+    border-radius: 3rem;
     background: transparent;
 }
 
 .notificationIcon {
-    width: 20px;
-    height: 20px;
+    width: 20rem;
+    height: 20rem;
     object-fit: contain;
 }
 
 .notificationFallbackIcon {
-    width: 24px;
-    height: 24px;
+    width: 24rem;
+    height: 24rem;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 16rem;
     font-weight: 700;
-    border-radius: 3px;
+    border-radius: 3rem;
     background: rgba(65, 160, 180, 0.85);
 }
 
@@ -118,9 +118,9 @@
 
 .notificationName {
     color: #ffffff;
-    font-size: 13px;
+    font-size: 13rem;
     font-weight: 600;
-    line-height: 18px;
+    line-height: 18rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -136,19 +136,19 @@
 }
 
 .notificationCountBadge {
-    min-width: 38px;
-    height: 24px;
-    padding: 0 8px;
+    min-width: 38rem;
+    height: 24rem;
+    padding: 0 8rem;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 12px;
+    font-size: 12rem;
     font-weight: 800;
-    line-height: 24px;
-    border-radius: 3px;
+    line-height: 24rem;
+    border-radius: 3rem;
     background: rgba(28, 47, 58, 0.96);
-    border: 1px solid rgba(80, 115, 130, 0.75);
+    border: 1rem solid rgba(80, 115, 130, 0.75);
 }
 
 .notificationToggle {

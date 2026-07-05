@@ -9,8 +9,10 @@ namespace NotificationLooker.Systems
         // Events group name.
         public const string GroupName = "NotificationLooker";
 
-        // Events from UI to C#.
         public const string MainButtonClicked = "mainButtonClicked";
+        public const string MainButtonMoved = "mainButtonMoved";
+
+        // Events from UI to C#.
         public const string MainPanelUISettings = "mainPanelUISettings";
         public const string MainPanelMoved = "mainPanelMoved";
 

@@ -218,7 +218,7 @@ export const MainPanel = () =>
                     <Panel
                         id={MainPanelID}
                         className={styles.mainPanel}
-                        style={{ left: `${panelPosition.x}px`, top: `${panelPosition.y}px` }}
+                        style={{ left: `${panelPosition.x}px`, top: `${panelPosition.y}px`, cursor: "grab" }}
                         header={(
                             <div className={styles.mainPanelHeader} onMouseDown={onMouseDown}>
                                 <img className={ModuleResolver.instance.PanelClasses.icon} src={icon} />
@@ -275,11 +275,11 @@ export const MainPanel = () =>
 
                                         {/* Child Instance Sub-List */}
                                         {isExpanded && (
-                                            <div style={{ display: "flex", flexDirection: "column", paddingLeft: "16px", gap: "2px", marginBottom: "6px", contain: "layout paint style" }}>
+                                            <div style={{ display: "flex", flexDirection: "column", paddingLeft: "16rem", gap: "2rem", marginBottom: "6rem", contain: "layout paint style" }}>
                                                 {matchingInstances.slice(0, 50).map((instance) => (
                                                     <div 
                                                         className={styles.notificationRow}
-                                                        style={{ minHeight: "32px" }} // Slightly slimmer height profile to differentiate sub-items visually
+                                                        style={{ minHeight: "32rem" }} // Slightly slimmer height profile to differentiate sub-items visually
                                                         key={`${instance.entityIndex}:${instance.entityVersion}`}
                                                         onClick={() => onInstanceItemClick(instance.entityIndex, instance.entityVersion)}
                                                     >
@@ -293,7 +293,7 @@ export const MainPanel = () =>
                                                             style={{ 
                                                                     display: "flex", 
                                                                     alignItems: "center", 
-                                                                    gap: "6px", 
+                                                                    gap: "6rem", 
                                                                     whiteSpace: "nowrap", 
                                                                     overflow: "hidden" 
                                                                 }}
@@ -303,12 +303,12 @@ export const MainPanel = () =>
                                                             </div>
                                                             <span 
                                                                 style={{ 
-                                                                    fontSize: "11px", 
+                                                                    fontSize: "11rem", 
                                                                     opacity: 0.5, 
                                                                     fontFamily: "monospace",
                                                                     backgroundColor: "rgba(255, 255, 255, 0.08)",
-                                                                    padding: "1px 4px",
-                                                                    borderRadius: "4px"
+                                                                    padding: "1rem 4rem",
+                                                                    borderRadius: "4rem"
                                                                 }}
                                                             >
                                                                 #{instance.entityIndex}:{instance.entityVersion}
@@ -319,7 +319,7 @@ export const MainPanel = () =>
 
                                                 {/* Optional indicator if items are hidden */}
                                                 {matchingInstances.length > 50 && (
-                                                    <div className={styles.emptyState} style={{ padding: "4px", fontSize: "12px", opacity: 0.7 }}>
+                                                    <div className={styles.emptyState} style={{ padding: "4rem", fontSize: "12rem", opacity: 0.7 }}>
                                                         Showing first 50 of {matchingInstances.length} instances...
                                                     </div>
                                                 )}

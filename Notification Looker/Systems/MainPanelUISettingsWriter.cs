@@ -18,6 +18,12 @@ namespace NotificationLooker.Systems
             writer.PropertyName("mainPanelY");
             writer.Write(value.MainPanelY);
 
+            writer.PropertyName("mainButtonX");
+            writer.Write(value.MainButtonX);
+
+            writer.PropertyName("mainButtonY");
+            writer.Write(value.MainButtonY);
+
             writer.TypeEnd();
         }
     }

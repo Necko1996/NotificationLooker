@@ -22,6 +22,12 @@ namespace NotificationLooker.Settings
         [SettingsUIHidden]
         public float MainPanelY { get; set; } = 175f;
 
+        [SettingsUIHidden]
+        public float MainButtonX { get; set; } = 500f;
+
+        [SettingsUIHidden]
+        public float MainButtonY { get; set; } = 0f;
+
         public Setting(IMod mod) : base(mod)
         {
 
@@ -32,6 +38,8 @@ namespace NotificationLooker.Settings
             MainPanelShow = false;
             MainPanelX = 55f;
             MainPanelY = 175f;
+            MainButtonX = 500f;
+            MainButtonY = 0f;
         }
     }
 }

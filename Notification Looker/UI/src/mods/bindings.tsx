@@ -21,6 +21,8 @@ type MainPanelSettings = {
     mainPanelShow: boolean;
     mainPanelX: number;
     mainPanelY: number;
+    mainButtonX: number;
+    mainButtonY: number;
 }
 
 // Main panel UI settings.
