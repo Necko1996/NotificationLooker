@@ -275,7 +275,7 @@ export const MainPanel = () =>
 
                                         {/* Child Instance Sub-List */}
                                         {isExpanded && (
-                                            <div style={{ display: "flex", flexDirection: "column", paddingLeft: "16rem", gap: "2rem", marginBottom: "6rem", contain: "layout paint style" }}>
+                                            <div style={{ display: "flex", flexDirection: "column", paddingLeft: "16rem", marginBottom: "6rem", contain: "layout paint style" }}>
                                                 {matchingInstances.slice(0, 50).map((instance) => (
                                                     <div 
                                                         className={styles.notificationRow}
@@ -292,8 +292,7 @@ export const MainPanel = () =>
                                                             className={styles.notificationInfo}
                                                             style={{ 
                                                                     display: "flex", 
-                                                                    alignItems: "center", 
-                                                                    gap: "6rem", 
+                                                                    alignItems: "center",
                                                                     whiteSpace: "nowrap", 
                                                                     overflow: "hidden" 
                                                                 }}

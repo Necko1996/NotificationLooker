@@ -16,7 +16,6 @@
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10rem;
     padding: 0 10rem;
     border-radius: 6rem 6rem 0 0;
 }
@@ -24,7 +23,6 @@
 .mainPanelHeader img {
     width: 24rem;
     height: 24rem;
-    object-fit: contain;
 }
 
 .mainPanelHeaderTitle {
@@ -60,7 +58,6 @@
     min-height: 36rem;
     display: flex;
     align-items: center;
-    gap: 8rem;
     margin-bottom: 5rem;
     padding: 5rem 8rem;
     background: rgba(70, 95, 107, 0.86);
@@ -74,10 +71,6 @@
 
 .notificationRow:active {
     background: rgba(58, 84, 96, 0.96);
-}
-
-.notificationRow:focus {
-    outline: none;
 }
 
 .notificationIconBox {
@@ -94,7 +87,6 @@
 .notificationIcon {
     width: 20rem;
     height: 20rem;
-    object-fit: contain;
 }
 
 .notificationFallbackIcon {

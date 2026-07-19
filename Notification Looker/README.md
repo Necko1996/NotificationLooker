@@ -1,9 +1,6 @@
 # Notification Looker
 
-City Watchdog helps reduce notification icon clutter in Cities Skylines II.
-
-Open the in-game City Watchdog panel to show or hide notification icons by category, or change individual alerts one by one.
-The mod also includes simple money tools and milestone setup.
+One place for all your notifications across the city!
 
 ### What does this mod do?
 
