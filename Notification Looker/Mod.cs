@@ -32,7 +32,7 @@ namespace NotificationLooker
             log.Info(Name + ' ' + Version + ' ' + InformationalVersion);
 
             m_Setting = new Setting(this);
-            m_Setting.RegisterInOptionsUI();
+            //m_Setting.RegisterInOptionsUI();
 
             // Load Localisations
             IDictionary<string, Colossal.IDictionarySource> localisation = new Dictionary<string, Colossal.IDictionarySource>();
@@ -55,7 +55,7 @@ namespace NotificationLooker
             log.Info(nameof(OnDispose));
             if (m_Setting != null)
             {
-                m_Setting.UnregisterInOptionsUI();
+                //m_Setting.UnregisterInOptionsUI();
                 m_Setting = null;
             }
         }
